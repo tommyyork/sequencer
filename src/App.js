@@ -6,9 +6,13 @@ import './App.css';
 class App extends Component {
   constructor() {
     super();
+    
     this.state = {
       started: true,       // needs fix: this should start false, change to true. below is a hacky solution.
       currentNote: 1,
+      width: 360,
+      strokeWidth: 48,
+      viewBox: `0 0 360 360`,   // also put width here, for now
       sequence: {
         notes: {
           1: 'C3',
@@ -46,6 +50,24 @@ class App extends Component {
           15: true,
           16: true
         },
+        colors: {
+          1: '#000000',
+          2: '#111111',
+          3: '#222222',
+          4: '#333333',
+          5: '#444444',
+          6: '#555555',
+          7: '#666666',
+          8: '#777777',
+          9: '#888888',
+          10: '#999999',
+          11: '#AAAAAA',
+          12: '#BBBBBB',
+          13: '#CCCCCC',
+          14: '#DDDDDD',
+          15: '#EEEEEE',
+          16: '#FFFFFF'
+        }
       }
     }
   }
@@ -81,8 +103,6 @@ class App extends Component {
   }
 
   startOrStopSynth(e) {
-    // e.preventDefault();
-    // e.stopPropagation();
     this.setState({ started: !this.state.started });
     (this.state.started) ? Tone.Transport.start() : Tone.Transport.stop();
   }
@@ -93,89 +113,70 @@ class App extends Component {
     this.setState(stateObj);
   }
 
-  assignXcoordinate(n, radius, xOffset, yOffset) {
-    let angle = (2 * (16 - (n))) * Math.PI / 16;
-    let x = xOffset + radius * Math.cos(angle * 3 / Math.PI);
-    return x
-  }
-
-  assignYcoordinate(n, radius, xOffset, yOffset) {
-    let angle = (2 * (16 - (n))) * Math.PI / 16;
-    let y = yOffset + radius * Math.sin(angle * 3 / Math.PI);
-    return y;
-  }
-
-  renderButton(x, xPosition, yPosition) {
-    let angle = (2 * (16 - (x))) * Math.PI / 16;
-    let style = {}
-
-    let segmentBorderRadius = 150;
-    let segmentWidth = 10;
-    let segmentHeight = 10;
-
-    let spanStyleOff = {
-      width: `{$segmentWidth}px`,
-      height: `{$segmentHeight}px`,
-      position: 'absolute', 
-      top: yPosition + segmentHeight / 2, 
-      left: xPosition + segmentHeight / 2,
-      fontSize: '.75em',
-      background: `lightGrey`,
-      mozBorderRadius: `${segmentBorderRadius}`,
-      webkitBorderRadius: `${segmentBorderRadius}`,
-      borderRadius: `${segmentBorderRadius}`,
-      transform: { rotate: `${angle}deg`}
-    }
-
-    let spanStyleOn = {
-      width: `{$segmentWidth}px`,
-      height: `{$segmentHeight}px`,
-      position: 'absolute', 
-      top: yPosition + segmentHeight / 2, 
-      left: xPosition + segmentHeight / 2,
-      fontSize: '.75em',
-      background: `lightBlue`,
-      mozBorderRadius: `${segmentBorderRadius}`,
-      webkitBorderRadius: `${segmentBorderRadius}`,
-      borderRadius: `${segmentBorderRadius}`,
-    }
-
-    let spanStyleActive = {
-      width: `{$segmentWidth}px`,
-      height: `{$segmentHeight}px`,
-      position: 'absolute', 
-      top: yPosition + segmentHeight / 2, 
-      left: xPosition + segmentHeight / 2,
-      fontSize: '.75em',
-      background: `green`,
-      mozBorderRadius: `${segmentBorderRadius}`,
-      webkitBorderRadius: `${segmentBorderRadius}`,
-      borderRadius: `${segmentBorderRadius}`,
-    }
+  renderButton(x, width, strokeWidth) {
+    let radius = (width / 2) - (strokeWidth / 2);
+    let cx = width / 2;
+    let cy = width / 2;
+    let id = `arc${x}`
+    let strokeColor = ''
 
     if (this.state.currentNote === x) {
-      style = spanStyleActive;
+      strokeColor = '#f77a52';
     } else if (this.state.sequence.on[x] && this.state.currentNote !== x) {
-      style = spanStyleOn;
+      strokeColor = this.state.sequence.colors[x];
     } else if (!this.state.sequence.on[x] && this.state.currentNote !== x) {
-      style = spanStyleOff;
+      strokeColor = '#4277f4';
     }
 
-
-    if (!this.state.sequence.on[x]) return (
-    <a key={x} onClick={(e) => this.flipNote(x)} 
-      style={style}>
-        {`${x}`}
-    </a>
-    )
-
-    if (this.state.sequence.on[x]) return (
-      <a key={x} onClick={(e) => this.flipNote(x)} 
-        style={style}>
-          {`${x}`}
+    return (
+      <a key={x} onClick={(e) => this.flipNote(x)} >
+        <path id={id} 
+          fill="none" 
+          stroke={strokeColor}
+          strokeWidth={strokeWidth / 2} 
+          d={this.describeArc(cx, cy, radius, 360*((x)/16), 360)}/>
       </a>
     )
   }
+
+  polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+    var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+
+    return {
+      x: centerX + (radius * Math.cos(angleInRadians)),
+      y: centerY + (radius * Math.sin(angleInRadians))
+    };
+  }
+
+  describeArc(x, y, radius, startAngle, endAngle) {
+    var start = this.polarToCartesian(x, y, radius, endAngle);
+    var end = this.polarToCartesian(x, y, radius, startAngle);
+    var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+    var d = [
+      "M", start.x, start.y,
+      "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
+    ].join(" ");
+
+    return d;
+  }
+
+  generateCircle(width, strokeWidth) {
+    let radius = (width / 2) - (strokeWidth / 2);
+    let cx = width / 2;
+    let cy = width / 2;
+
+    return (
+        <circle 
+          cx={cx} 
+          cy={cy} 
+          r={radius} 
+          fill="none" 
+          stroke="#e6e6e6"
+    strokeWidth={strokeWidth} /> )
+
+  }
+
+
 
   render() {
     let notes = [];
@@ -188,11 +189,19 @@ class App extends Component {
       <div className="App">
       <header>
         <div>
-          <button className="btn btn-primary" onClick={(e) => this.startOrStopSynth(e)}>{this.state.started ? `Start` : `Stop`}</button>
+          <button className="btn btn-primary" 
+            onClick={(e) => this.startOrStopSynth(e)}>
+              {this.state.started ? `Start` : `Stop`}
+          </button>
         </div>
       </header>
-      <div className="circle">
-          {notes.map((n) => this.renderButton(n, this.assignYcoordinate(n, 150, 150, 150), this.assignXcoordinate(n, 150, 150, 150)))}
+      <div>
+
+        <svg width={this.state.width} height={this.state.width} viewBox={this.state.viewBox} >
+          {this.generateCircle(this.state.width, this.state.strokeWidth)}
+          {notes.map((n) => 
+            this.renderButton(n, this.state.width, this.state.strokeWidth))}
+          </svg >
       </div>
       </div>
     );

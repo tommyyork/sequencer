@@ -22,17 +22,6 @@
   font-size: large;
 }
 
-.circle{
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  text-align: center;
-  width: 320px;
-  height: 320px;
-  border-radius: 100%;
-  background-color: #E6F4F7;
-}
-
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

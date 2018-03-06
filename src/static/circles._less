@@ -1,0 +1,166 @@
+
+	/* square aspect ratio elements */
+	.squarewrapper {
+		position: relative;
+		padding-bottom: 100%;
+		height: 0;
+		.square {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			overflow:hidden;
+		}
+	}
+
+	/* CIRCLES */
+	/* Number of segments is the only required argument. Cannot accept a number below 4. Anything above 12 starts to render badly. */
+	/* If @donut is set to yes, the circle will be rendered as a ring (defaults to white, you can set your own background if needed) */
+	/* If @donutStatic is set to yes, the segments of the ring will appear to move outwards when hovered */
+	@transpeed: 0.3s;
+	
+	.csscircle {
+		position:absolute;
+		top:10%;
+		left:10%;
+		width:80%;
+		height:80%;
+		.border-radius( 100% );
+		.border-box();
+	}
+
+	.gencircle(@numSegments,@donut: no,@donutSize: 50%,@donutStatic: no){
+		@segmentAngle: 360 / @numSegments;
+		@skew: 90 - @segmentAngle;
+		.segment {
+			.transform( skewX(~"@{skew}deg") );
+			.inner {
+				.transform( skewX(~"-@{skew}deg") );
+				&:hover {
+					.transform( skewX(~"-@{skew}deg") scale(1.1) );
+				}
+			}
+		}
+
+		&.nohover {
+			.segment {
+				.inner {
+					cursor:default;
+					&:hover {
+						.transform( skewX(~"-@{skew}deg") );
+					}
+				}
+			}
+		}
+
+		/* generate the segment classes */
+		@segmentIterations: 360;
+		.segmentLoop(@segmentIndex) when (@segmentIndex > 0){
+			@segmentNumber: @segmentIndex / @segmentAngle;
+			.segment@{segmentNumber}{
+				.transform( rotate(~"@{segmentIndex}deg") );
+			}
+			.segmentLoop(@segmentIndex - @segmentAngle);
+		}
+		.segmentLoop(0){}
+		.segmentLoop(@segmentIterations);
+	}
+
+	/* same mixin with guards */
+	.gencircle(@numSegments,@donut: no,@donutSize: 50%,@donutStatic: no) when (@donut = yes){
+		.donut(@donutSize);
+	}
+	.gencircle(@numSegments,@donut: no,@donutSize: 50%,@donutStatic: no) when (@donutStatic = yes){
+		@segmentAngle: 360 / @numSegments;
+		@skew: 90 - @segmentAngle;
+		.staticdonut(@donutSize,@skew);
+	}
+	.segmentmixin(@start,@size,@bg,@ts){
+		@rotate: @start + 90;
+		@skew2:@size - 90;
+		@skew1:-@skew2;
+
+		.transform( rotate(~"@{rotate}deg") );
+		.transition( all @ts ease );
+		.segment {
+			.transform( skewX(~"@{skew1}deg") );
+			.inner {
+				background:@bg;
+				.transform( skewX(~"@{skew2}deg") );
+				border:solid 0 @bg;
+				&:hover {
+					z-index:3;
+					.transform( skewX(~"@{skew2}deg") scale(1.1) );
+				}
+			}
+		}
+	}
+
+	/* classes that are needed for the circle but don't need to be repeated for every use of the mixin */
+	.segmentwrapper {
+		position:absolute;
+		top:49%;
+		left:49%;
+		width:2%;
+		height:2%;
+	}
+	.segment {
+		position:absolute;
+		bottom:50%;
+		right:50%;
+		width:5000%;
+		height:5000%;
+		overflow:hidden;
+		.transition( all @transpeed );
+		.transform-point( 0% 100% );
+
+		.inner {
+			position:absolute;
+			right:-50%;
+			bottom:-50%;
+			width:100%;
+			height:100%;
+			background:#333333;
+			.border-radius( 100% );
+			.transition( all @transpeed );
+			.transform-point( 50% 50% );
+			cursor:pointer;
+		}
+	}
+
+
+	/* add a hole into the middle, making the overall circle a loop */
+	.donut(@donutSize) {
+		&:after {
+			content:"";
+			position:absolute;
+			z-index:100;
+			top:(100% - @donutSize) / 2;
+			left:(100% - @donutSize) / 2;
+			width:@donutSize;
+			height:@donutSize;
+			background:#FFFFFF;
+			.border-radius( 1000px );
+			.border-box();
+		}
+	}
+	/* add the hole to the individual segments, so the hover effect makes them look like they move outwards rather than just expanding */
+	.staticdonut(@donutSize,@skew) {
+		.segment {
+			.inner {
+				&:before {
+					content:"";
+					position:absolute;
+					z-index:100;
+					top:(100% - @donutSize) / 2;
+					left:(100% - @donutSize) / 2;
+					width:@donutSize;
+					height:@donutSize;
+					background:#FFFFFF;
+					.transform( skewX(~"-@{skew * 2}deg") );
+					.border-radius( 1000px );
+				}
+			}
+		}
+	}
