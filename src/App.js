@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import Tone from 'tone';
 import './App.css';
 
@@ -8,6 +8,7 @@ class App extends Component {
     super();
     this.state = {
       started: true,       // needs fix: this should start false, change to true. below is a hacky solution.
+      currentNote: 1,
       sequence: {
         notes: {
           1: 'C3',
@@ -51,10 +52,9 @@ class App extends Component {
 
   componentDidMount() {
     var synth = new Tone.PolySynth(4, Tone.Synth).toMaster();
+
     let triggerSynth = (time, note) => {
-      console.log(note);
-      console.log('planned note?', this.state.sequence.on[note]);
-      console.log('planned pitch?', this.state.sequence.notes[note]);
+      this.setState({currentNote: note}, () => console.log(this.state.currentNote));
       if (this.state.sequence.on[note]) synth.triggerAttackRelease(this.state.sequence.notes[note], '3n', time);
     }
 
@@ -93,23 +93,87 @@ class App extends Component {
     this.setState(stateObj);
   }
 
-  renderButton(x) {
-    
-    
+  assignXcoordinate(n, radius, xOffset, yOffset) {
+    let angle = (2 * (16 - (n))) * Math.PI / 16;
+    let x = xOffset + radius * Math.cos(angle * 3 / Math.PI);
+    return x
+  }
+
+  assignYcoordinate(n, radius, xOffset, yOffset) {
+    let angle = (2 * (16 - (n))) * Math.PI / 16;
+    let y = yOffset + radius * Math.sin(angle * 3 / Math.PI);
+    return y;
+  }
+
+  renderButton(x, xPosition, yPosition) {
+    let angle = (2 * (16 - (x))) * Math.PI / 16;
+    let style = {}
+
+    let segmentBorderRadius = 150;
+    let segmentWidth = 10;
+    let segmentHeight = 10;
+
+    let spanStyleOff = {
+      width: `{$segmentWidth}px`,
+      height: `{$segmentHeight}px`,
+      position: 'absolute', 
+      top: yPosition + segmentHeight / 2, 
+      left: xPosition + segmentHeight / 2,
+      fontSize: '.75em',
+      background: `lightGrey`,
+      mozBorderRadius: `${segmentBorderRadius}`,
+      webkitBorderRadius: `${segmentBorderRadius}`,
+      borderRadius: `${segmentBorderRadius}`,
+      transform: { rotate: `${angle}deg`}
+    }
+
+    let spanStyleOn = {
+      width: `{$segmentWidth}px`,
+      height: `{$segmentHeight}px`,
+      position: 'absolute', 
+      top: yPosition + segmentHeight / 2, 
+      left: xPosition + segmentHeight / 2,
+      fontSize: '.75em',
+      background: `lightBlue`,
+      mozBorderRadius: `${segmentBorderRadius}`,
+      webkitBorderRadius: `${segmentBorderRadius}`,
+      borderRadius: `${segmentBorderRadius}`,
+    }
+
+    let spanStyleActive = {
+      width: `{$segmentWidth}px`,
+      height: `{$segmentHeight}px`,
+      position: 'absolute', 
+      top: yPosition + segmentHeight / 2, 
+      left: xPosition + segmentHeight / 2,
+      fontSize: '.75em',
+      background: `green`,
+      mozBorderRadius: `${segmentBorderRadius}`,
+      webkitBorderRadius: `${segmentBorderRadius}`,
+      borderRadius: `${segmentBorderRadius}`,
+    }
+
+    if (this.state.currentNote === x) {
+      style = spanStyleActive;
+    } else if (this.state.sequence.on[x] && this.state.currentNote !== x) {
+      style = spanStyleOn;
+    } else if (!this.state.sequence.on[x] && this.state.currentNote !== x) {
+      style = spanStyleOff;
+    }
+
+
     if (!this.state.sequence.on[x]) return (
-    <div key={x}>
-      <button className="btn btn-success" onClick={(e) => this.flipNote(x)}>
-        {`unmute ${x}`}
-      </button>
-    </div>
+    <a key={x} onClick={(e) => this.flipNote(x)} 
+      style={style}>
+        {`${x}`}
+    </a>
     )
 
     if (this.state.sequence.on[x]) return (
-      <div key={x}>
-        <button className="btn btn-warning" onClick={(e) => this.flipNote(x)}>
-          {`mute ${x}`}
-      </button>
-      </div>
+      <a key={x} onClick={(e) => this.flipNote(x)} 
+        style={style}>
+          {`${x}`}
+      </a>
     )
   }
 
@@ -122,16 +186,14 @@ class App extends Component {
 
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
+      <header>
+        <div>
           <button className="btn btn-primary" onClick={(e) => this.startOrStopSynth(e)}>{this.state.started ? `Start` : `Stop`}</button>
-        </p>
-        <p>
-          {notes.map((x) => this.renderButton(x))}
-        </p>
+        </div>
+      </header>
+      <div className="circle">
+          {notes.map((n) => this.renderButton(n, this.assignYcoordinate(n, 150, 150, 150), this.assignXcoordinate(n, 150, 150, 150)))}
+      </div>
       </div>
     );
   }
