@@ -133,8 +133,8 @@ class App extends Component {
         <path id={id} 
           fill="none" 
           stroke={strokeColor}
-          strokeWidth={strokeWidth / 2} 
-          d={this.describeArc(cx, cy, radius, 360*((x)/16), 360)}/>
+          strokeWidth={strokeWidth} 
+          d={this.describeArc(cx, cy, radius, 360*((x - 1)/16), 360, x)}/>
       </a>
     )
   }
@@ -148,8 +148,8 @@ class App extends Component {
     };
   }
 
-  describeArc(x, y, radius, startAngle, endAngle) {
-    var start = this.polarToCartesian(x, y, radius, endAngle);
+  describeArc(x, y, radius, startAngle, endAngle, note) {
+    var start = this.polarToCartesian(x, y, radius, endAngle - .0001);
     var end = this.polarToCartesian(x, y, radius, startAngle);
     var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
     var d = [
@@ -193,14 +193,16 @@ class App extends Component {
             onClick={(e) => this.startOrStopSynth(e)}>
               {this.state.started ? `Start` : `Stop`}
           </button>
+            <h1 className="display-4">{this.state.currentNote}</h1>
         </div>
       </header>
       <div>
 
         <svg width={this.state.width} height={this.state.width} viewBox={this.state.viewBox} >
-          {this.generateCircle(this.state.width, this.state.strokeWidth)}
+          {/* {this.generateCircle(this.state.width, this.state.strokeWidth)} */}
           {notes.map((n) => 
             this.renderButton(n, this.state.width, this.state.strokeWidth))}
+            
           </svg >
       </div>
       </div>
