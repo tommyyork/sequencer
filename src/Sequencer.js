@@ -39,24 +39,7 @@ class Sequencer extends Component {
           15: true,
           16: true
         },
-        colors: {
-          1: '#000000',
-          2: '#111111',
-          3: '#222222',
-          4: '#333333',
-          5: '#444444',
-          6: '#555555',
-          7: '#666666',
-          8: '#777777',
-          9: '#888888',
-          10: '#999999',
-          11: '#AAAAAA',
-          12: '#BBBBBB',
-          13: '#CCCCCC',
-          14: '#DDDDDD',
-          15: '#EEEEEE',
-          16: '#FFFFFF'
-        }
+        colors: this.props.colors
       }
     }
   }
@@ -179,18 +162,18 @@ class Sequencer extends Component {
     notes = notes.map((x, i) => i + 1);
     // console.log(notes);
 
-    return (
-      <div>
+    return notes.map((n) => this.renderButton(n));
+  //     <div>
 
-        <svg width={this.width} height={this.props.width} viewBox={this.viewBox} >
-        <h1 className="display-4">{this.state.currentNote}</h1>
-          {/* {this.generateCircle(this.state.width, this.state.strokeWidth)} */}
-          {notes.map((n) => 
-            this.renderButton(n))}
+  //       {/* <svg width={this.width} height={this.props.width} viewBox={this.viewBox} > */}
+  //       {/* <h1 className="display-4">{this.state.currentNote}</h1> */}
+  //         {/* {this.generateCircle(this.state.width, this.state.strokeWidth)} */}
+  //         {}
             
-          </svg >
-      </div>
-    );
+  //         {/* </svg > */}
+  //     </div>
+  //   );
+  // }'
   }
 }
 

@@ -8,7 +8,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      started: false
+      started: true
     }
   }
 
@@ -55,6 +55,44 @@ class App extends Component {
     1: 'F4'
   }
 
+  colors1 = {
+    1: '#0000FF',
+    2: '#1111FF',
+    3: '#2222FF',
+    4: '#3333FF',
+    5: '#4444FF',
+    6: '#5555FF',
+    7: '#6666FF',
+    8: '#7777FF',
+    9: '#8888FF',
+    10: '#9999FF',
+    11: '#AAAAFF',
+    12: '#BBBBFF',
+    13: '#CCCCFF',
+    14: '#DDDDFF',
+    15: '#EEEEFF',
+    16: '#FFFFFF'
+  }
+
+  colors2 = {
+    16: '#0000FF',
+    15: '#1111FF',
+    14: '#2222FF',
+    13: '#3333FF',
+    12: '#4444FF',
+    11: '#5555FF',
+    10: '#6666FF',
+    9: '#7777FF',
+    8: '#8888FF',
+    7: '#9999FF',
+    6: '#AAAAFF',
+    5: '#BBBBFF',
+    4: '#CCCCFF',
+    3: '#DDDDFF',
+    2: '#EEEEFF',
+    1: '#FFFFFF'
+  }
+
   render() {
     return (
       <div className="App">
@@ -69,8 +107,26 @@ class App extends Component {
         </div>
       </header>
       <div>
-        <Sequencer top={0} right={0} width={180} cx={90} cy={90} started={this.state.started} sequence={this.notes1}/>
-        <Sequencer top={0} right={0} width={90} cx={45} cy={45} started={this.state.started} sequence={this.notes2} />
+      <svg width={512} height={512} viewBox={`-72 -24 512 512`} >
+        <Sequencer 
+          top={0} 
+          right={0} 
+          width={360} 
+          cx={180} 
+          cy={180} 
+          started={this.state.started} 
+          sequence={this.notes1}
+          colors={this.colors1}/>
+        <Sequencer 
+          top={45} 
+          right={45} 
+          width={180} 
+          cx={180} 
+          cy={180} 
+          started={this.state.started} 
+          sequence={this.notes2} 
+          colors={this.colors2}/>
+      </svg>
       </div>
     </div>
     );
