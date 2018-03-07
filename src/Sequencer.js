@@ -12,8 +12,8 @@ class Sequencer extends Component {
     this.synth = new Tone.PolySynth(4, Tone.Synth).connect(this.reverb);
 
     this.width =  this.props.width;
-    this.strokeWidth = 48;
-    this.viewBox = `0 0 ${this.props.right + this.width + this.strokeWidth + 2} ${this.props.top + this.width + this.strokeWidth + 2}`,   // also put width here, for now
+    this.strokeWidth = 36;
+    this.viewBox = `0 0 ${this.width + this.strokeWidth + 2} ${this.props.top * 2 + this.width + this.strokeWidth + 2}`,   // also put width here, for now
     
 
     this.state  = {
@@ -107,8 +107,8 @@ class Sequencer extends Component {
     let strokeWidth = this.strokeWidth;
 
     let radius = (width / 2) - (strokeWidth / 2);
-    let cx = this.props.right + width / 2;
-    let cy = this.props.top + width / 2;
+    let cx = this.props.cx;
+    let cy = this.props.cy;
     let id = `arc${x}`
     let strokeColor = ''
 
@@ -141,8 +141,8 @@ class Sequencer extends Component {
   }
 
   describeArc(x, y, radius, startAngle, endAngle, note) {
-    var start = this.polarToCartesian(this.props.right + x, this.props.top + y, radius, endAngle - .0001);
-    var end = this.polarToCartesian(this.props.right + x, this.props.top + y, radius, startAngle);
+    var start = this.polarToCartesian(this.props.cx, this.props.cy, radius, endAngle - .0001);
+    var end = this.polarToCartesian(this.props.cx, this.props.cy, radius, startAngle);
     var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
     var d = [
       "M", start.x, start.y,
@@ -154,8 +154,8 @@ class Sequencer extends Component {
 
   generateCircle(width, strokeWidth) {
     let radius = (width / 2) - (strokeWidth / 2);
-    let cx = this.props.right + width / 2;
-    let cy = this.props.top + width / 2;
+    let cx = this.props.cx;
+    let cy = this.props.cy;
 
     return (
         <circle 

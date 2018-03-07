@@ -69,8 +69,8 @@ class App extends Component {
         </div>
       </header>
       <div>
-        <Sequencer top={0} right={0} width={180} started={this.state.started} sequence={this.notes1}/>
-        <Sequencer top={100} right={100} width={180} started={this.state.started} sequence={this.notes2} />
+        <Sequencer top={0} right={0} width={180} cx={90} cy={90} started={this.state.started} sequence={this.notes1}/>
+        <Sequencer top={0} right={0} width={90} cx={45} cy={45} started={this.state.started} sequence={this.notes2} />
       </div>
     </div>
     );
