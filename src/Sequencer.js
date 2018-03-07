@@ -20,24 +20,7 @@ class Sequencer extends Component {
       started: true,       // needs fix: this should start false, change to true. below is a hacky solution.
       currentNote: 1,
       sequence: {
-        notes: {
-          1: 'C3',
-          2: 'F3',
-          3: 'C3',
-          4: 'A3',
-          5: 'C3',
-          6: 'F3',
-          7: 'C3',
-          8: 'C4',
-          9: 'C3',
-          10: 'A3',
-          11: 'C3',
-          12: 'C4',
-          13: 'C3',
-          14: 'C4',
-          15: 'C4',
-          16: 'F4'
-        },
+        notes: this.props.sequence,
         on: {       // again, these all need to be flipped
           1: true,
           2: true,
