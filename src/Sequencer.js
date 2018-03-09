@@ -7,13 +7,13 @@ class Sequencer extends Component {
   constructor(props) {
     super(props);
     
-    this.reverb = new Tone.Freeverb().toMaster();
-    this.reverb.wet.value = 0.5;
-    this.synth = new Tone.PolySynth(4, Tone.Synth).connect(this.reverb);
+    this.reverb = this.props.reverb;
+    // this.reverb.wet.value = 0.5;
+    this.synth = this.props.synth;
 
     this.width =  this.props.width;
     this.strokeWidth = 36;
-    this.viewBox = `0 0 ${this.width + this.strokeWidth + 2} ${this.props.top * 2 + this.width + this.strokeWidth + 2}`,   // also put width here, for now
+    this.viewBox = `0 0 ${this.width + this.strokeWidth + 2} ${this.props.top * 2 + this.width + this.strokeWidth + 2}`;   // also put width here, for now
     
 
     this.state  = {
@@ -46,27 +46,28 @@ class Sequencer extends Component {
 
 
   triggerSynth = (time, note) => {
+    console.log(this.synth);
     this.setState({currentNote: note}, () => console.log(this.state.currentNote));
-    if (this.state.sequence.on[note]) this.synth.triggerAttackRelease(this.state.sequence.notes[note], '3n', time);
+    if (this.state.sequence.on[note]) this.synth ? this.synth.triggerAttackRelease(this.state.sequence.notes[note], `${this.props.noteLength ? this.props.noteLength : 1}n`, time) : (null);
   }
 
 
   componentDidMount() {
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 1), '0:0:0')
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 2), '0:0:2')
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 3), '0:1:0')
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 1), '0:0:0');
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 2), '0:0:2');
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 3), '0:1:0');
     Tone.Transport.schedule((time) => this.triggerSynth(time, 4), '0:1:2');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 5), '0:2:0')
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 6), '0:2:2')
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 7), '0:3:0')
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 5), '0:2:0');
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 6), '0:2:2');
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 7), '0:3:0');
     Tone.Transport.schedule((time) => this.triggerSynth(time, 8), '0:3:2');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 9), '0:4:0')
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 10), '0:4:2')
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 11), '0:5:0')
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 9), '0:4:0');
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 10), '0:4:2');
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 11), '0:5:0');
     Tone.Transport.schedule((time) => this.triggerSynth(time, 12), '0:5:2');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 13), '0:6:0')
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 14), '0:6:2')
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 15), '0:7:0')
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 13), '0:6:0');
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 14), '0:6:2');
+    Tone.Transport.schedule((time) => this.triggerSynth(time, 15), '0:7:0');
     Tone.Transport.schedule((time) => this.triggerSynth(time, 16), '0:7:2');
 
     Tone.Transport.loopEnd = '2m'
@@ -162,18 +163,7 @@ class Sequencer extends Component {
     notes = notes.map((x, i) => i + 1);
     // console.log(notes);
 
-    return notes.map((n) => this.renderButton(n));
-  //     <div>
-
-  //       {/* <svg width={this.width} height={this.props.width} viewBox={this.viewBox} > */}
-  //       {/* <h1 className="display-4">{this.state.currentNote}</h1> */}
-  //         {/* {this.generateCircle(this.state.width, this.state.strokeWidth)} */}
-  //         {}
-            
-  //         {/* </svg > */}
-  //     </div>
-  //   );
-  // }'
+    return notes.map((n) => this.renderButton(n))
   }
 }
 

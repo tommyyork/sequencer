@@ -3,13 +3,22 @@ import React, { Component } from 'react';
 import Tone from 'tone';
 import './App.css';
 import Sequencer from './Sequencer';
+import { ParameterBox } from './ParameterBox';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      started: true
+      started: true,
+      noteLength: 16,
+      reverbWet: .05,
+      reverbSize: .1
     }
+
+    this.reverb = new Tone.Freeverb(this.state.reverbSize).toMaster();
+    this.reverb.wet.value = this.state.reverbWet;
+    this.synth = new Tone.PolySynth(4, Tone.Synth).connect(this.reverb);
+
   }
 
   startOrStopSynth(e) {
@@ -93,12 +102,22 @@ class App extends Component {
     1: '#FFFFFF'
   }
 
+  changeReverbWet(val) {
+    this.reverb.wet.value = val;
+    this.setState({reverbWet: val});
+  }
+
+  changeReverbSize(val) {
+    this.reverb.roomSize.value = val;
+    this.setState({reverbSize: val});
+  }
+
   render() {
     return (
       <div className="App">
       <header>
         <div>
-            <h1 className="display-4">Circular Sequencer Prototype</h1>
+            <h1 className="display-4">Circular Sequencer</h1>
           <button className="btn btn-primary" 
             onClick={(e) => this.startOrStopSynth(e)}>
               {this.state.started ? `Start` : `Stop`}
@@ -106,28 +125,45 @@ class App extends Component {
             
         </div>
       </header>
-      <div>
-      <svg width={512} height={512} viewBox={`-72 -24 512 512`} >
+      <p></p>
+      <div className="d-flex justify-content-center">
+        <pre>
+
+      <svg width={512} height={512} viewBox={`0 0 512 512`} >
         <Sequencer 
           top={0} 
           right={0} 
-          width={360} 
-          cx={180} 
-          cy={180} 
+          width={512} 
+          cx={256} 
+          cy={256} 
           started={this.state.started} 
           sequence={this.notes1}
-          colors={this.colors1}/>
-        <Sequencer 
-          top={45} 
-          right={45} 
-          width={180} 
-          cx={180} 
-          cy={180} 
+          colors={this.colors1}
+          reverbWet={this.state.reverbWet}
+          noteLength={this.state.noteLength}
+          reverb={this.reverb}
+          synth={this.synth}/>
+        {/* <Sequencer 
+          top={256} 
+          right={256} 
+          width={256} 
+          cx={256} 
+          cy={256} 
           started={this.state.started} 
           sequence={this.notes2} 
-          colors={this.colors2}/>
+          colors={this.colors2}
+          reverbWet={this.state.reverbWet}
+          noteLength={this.state.noteLength}/> */}
       </svg>
+      </pre>
+
       </div>
+      <p></p>
+      <ParameterBox 
+        changeReverbWet={this.changeReverbWet.bind(this)} 
+        changeReverbSize={this.changeReverbSize.bind(this)}
+        reverbWet={this.state.reverbWet}
+        reverbSize={this.state.reverbSize}/>
     </div>
     );
   }

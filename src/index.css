@@ -3,3 +3,58 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+* {
+  -moz-transition: all .15s;
+}
+
+.App {
+  background: rgb(63, 82, 99);
+}
+
+html {
+  background: rgb(63, 82, 99);
+}
+
+h1 {
+  color: white;
+}
+
+pre:not(:empty) {
+  overflow: auto;
+  background: rgb(48, 48, 48);
+  border: 1px solid #ccc;
+  max-height: 533px;
+  width: 533px;
+  font-size: 12px;
+  font-family: monospace;
+  padding: 10px 10px 10px;
+  box-shadow: -4px 4px 2px 0 rgba(0,0,0,0.3);
+  white-space: pre-wrap;
+  outline: 0;
+
+  text-align: center;
+}
+
+.parameterBox {
+  overflow: auto;
+  background: rgb(158, 158, 158);
+  border: 1px solid #ccc;
+  max-height: 256px;
+  max-width: 820px;
+  font-size: 16px;
+  font-family: Helvetica, sans-serif;
+  padding: 10px 10px 10px;
+  box-shadow: -4px 4px 2px 0 rgba(0,0,0,0.3);
+  white-space: pre-wrap;
+  outline: 0;
+  text-align: center;
+}
+
+knob {
+  display: auto;
+  justify-content: center;
+  text-align: center;
+  margin-top: 10px;
+  margin-left: 10px;
+}
