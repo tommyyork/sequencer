@@ -44,10 +44,11 @@ pre:not(:empty) {
   max-width: 820px;
   font-size: 16px;
   font-family: Helvetica, sans-serif;
-  padding: 10px 10px 10px;
+  /* padding: 10px 10px 10px; */
   box-shadow: -4px 4px 2px 0 rgba(0,0,0,0.3);
   white-space: pre-wrap;
   outline: 0;
+  font-size: 1em;
   text-align: center;
 }
 

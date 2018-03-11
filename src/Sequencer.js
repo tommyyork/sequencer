@@ -61,31 +61,21 @@ class Sequencer extends Component {
 
 
   componentDidMount() {
-
-    console.log('this.props.ringDivision:', this.props.ringDivision);
     let divisions = noteDivisionFxn(this.props.ringDivision[0][this.props.ring]);
-    console.log('divisions:', divisions);
 
-    // divisions.forEach((x, i) => 
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 1), '0:0:0');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 2), '0:0:2');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 3), '0:1:0');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 4), '0:1:2');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 5), '0:2:0');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 6), '0:2:2');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 7), '0:3:0');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 8), '0:3:2');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 9), '0:4:0');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 10), '0:4:2');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 11), '0:5:0');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 12), '0:5:2');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 13), '0:6:0');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 14), '0:6:2');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 15), '0:7:0');
-    Tone.Transport.schedule((time) => this.triggerSynth(time, 16), '0:7:2');
+    let scheduleMeasure = () => {
+        divisions = noteDivisionFxn(this.props.ringDivision[0][this.props.ring]);
+        if (divisions && divisions.length) divisions.forEach((x, i) => {
+        Tone.Transport.scheduleOnce((time) => this.triggerSynth(time, i + 1), x)
+        })
+      };
+    
+    
+    Tone.Transport.schedule(() => scheduleMeasure());
+
 
     Tone.Transport.loopEnd = '2m'
-    Tone.Transport.loop = true
+    Tone.Transport.loop = true;
 
   }
 

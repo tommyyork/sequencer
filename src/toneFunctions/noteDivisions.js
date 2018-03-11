@@ -3,7 +3,7 @@ let noteDivisionFxn = (division) => {
   console.log(32/division);
  
   let notes = [];
-  notes.length = Math.floor(32 * 1 / division) - 1;
+  notes.length = division;
   notes.fill(0);
   
   let atoms = 0;
@@ -14,17 +14,13 @@ let noteDivisionFxn = (division) => {
 
   notes = notes.map((x, i) => {
     atoms = Math.floor((i + 1) / division * 32);
-    eighths = Math.floor(atoms / 4) - 1;
-    thirtySeconds = atoms - eighths * 4 - 1;
+    eighths = Math.max(Math.floor(atoms / 4) - 1, 0)
+    thirtySeconds = Math.max(atoms - eighths * 4 - 1, 0);
 
     return `${measure}:${eighths}:${thirtySeconds}`;
   });
 
-  console.log(notes);
-
-
-
-
+  return notes;
 }
 
 export { noteDivisionFxn }

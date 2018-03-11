@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { CONSTANTS } from '../Constants';
 
 const ringSelection = (state = [], action) => {
   switch (action.type) {
@@ -9,12 +10,15 @@ const ringSelection = (state = [], action) => {
     }
 };
 
-const ringDivision = (state = [  {1 : 16, 2: 8, 3: 5} ], action) => {
+const ringDivision = (
+  state = [  {1 : CONSTANTS["1"].DIVISION, 2: CONSTANTS["2"].DIVISION, 3: CONSTANTS["3"].DIVISION} ], action) => {
   switch (action.type) {
     case 'CHANGE_RING_DIVISION':
-      let updatedObj = {};
-      updatedObj[action.ring] = action.division;
-      return [Object.assign(state[0], updatedObj) , ...state];
+      console.log(action);
+      let updatedObj = Object.assign({}, state[0])
+      updatedObj[action.payload.ring] = action.payload.division;
+      console.log('attempting to update with updatedObj', updatedObj);
+      return [updatedObj, ...state];
     default:
       return state;
     }

@@ -3,6 +3,7 @@ export const selectRing = (ring) => dispatch => {
 }
 
 export const changeRingDivision = (ring, division) => dispatch => {
-  dispatch ({ type: 'CHANGE_RING_DIVISION', payload: {ring: ring, division: ring}});
+  console.log('changeRingDivision args:', ring, division)
+  dispatch ({ type: 'CHANGE_RING_DIVISION', payload: {ring: ring, division: division}});
 }
 
