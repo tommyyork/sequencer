@@ -4,9 +4,9 @@ body {
   font-family: sans-serif;
 }
 
-* {
+/* * {
   -moz-transition: all .15s;
-}
+} */
 
 .App {
   background: rgb(63, 82, 99);

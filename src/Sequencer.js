@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
+import { connect } from 'react-redux';
 import Tone from 'tone';
-import './App.css';
+
+// redux dispatch functions
+
+import { selectRing, changeRingDivision } from './actions';
+
+// time signature division function
+
+import { noteDivisionFxn } from './toneFunctions/noteDivisions';
 
 class Sequencer extends Component {
   constructor(props) {
     super(props);
     
     this.reverb = this.props.reverb;
-    // this.reverb.wet.value = 0.5;
     this.synth = this.props.synth;
 
     this.width =  this.props.width;
-    this.strokeWidth = 36;
+    this.strokeWidth = this.props.strokeWidth;
     this.viewBox = `0 0 ${this.width + this.strokeWidth + 2} ${this.props.top * 2 + this.width + this.strokeWidth + 2}`;   // also put width here, for now
     
 
@@ -48,11 +54,19 @@ class Sequencer extends Component {
   triggerSynth = (time, note) => {
     console.log(this.synth);
     this.setState({currentNote: note}, () => console.log(this.state.currentNote));
-    if (this.state.sequence.on[note]) this.synth ? this.synth.triggerAttackRelease(this.state.sequence.notes[note], `${this.props.noteLength ? this.props.noteLength : 1}n`, time) : (null);
+    if (this.synth && this.state.sequence.on[note])
+      this.synth.triggerAttackRelease(this.state.sequence.notes[note],
+         `${this.props.noteLength ? this.props.noteLength : 1}n`, time);
   }
 
 
   componentDidMount() {
+
+    console.log('this.props.ringDivision:', this.props.ringDivision);
+    let divisions = noteDivisionFxn(this.props.ringDivision[0][this.props.ring]);
+    console.log('divisions:', divisions);
+
+    // divisions.forEach((x, i) => 
     Tone.Transport.schedule((time) => this.triggerSynth(time, 1), '0:0:0');
     Tone.Transport.schedule((time) => this.triggerSynth(time, 2), '0:0:2');
     Tone.Transport.schedule((time) => this.triggerSynth(time, 3), '0:1:0');
@@ -101,17 +115,20 @@ class Sequencer extends Component {
     } else if (this.state.sequence.on[x] && this.state.currentNote !== x) {
       strokeColor = this.state.sequence.colors[x];
     } else if (!this.state.sequence.on[x] && this.state.currentNote !== x) {
-      strokeColor = '#4277f4';
+      strokeColor = '#000000';
     }
 
     return (
-      <a key={x} onClick={(e) => this.flipNote(x)} >
+      [<a key={x} onClick={(e) => {
+        if (this.props.ringSelection[0] === this.props.ring) this.flipNote(x)
+        this.props.selectRing(this.props.ring)
+      }} >,
         <path id={id} 
           fill="none" 
           stroke={strokeColor}
           strokeWidth={strokeWidth} 
-          d={this.describeArc(cx, cy, radius, 360*((x - 1)/16), 360, x)}/>
-      </a>
+          d={this.describeArc(cx, cy, radius, 360*((x - 1)/this.props.ringDivision[0][this.props.ring]), 360, x)}/>,
+      </a>]
     )
   }
 
@@ -136,35 +153,51 @@ class Sequencer extends Component {
     return d;
   }
 
-  generateCircle(width, strokeWidth) {
-    let radius = (width / 2) - (strokeWidth / 2);
-    let cx = this.props.cx;
-    let cy = this.props.cy;
-
-    return (
-        <circle 
-          cx={cx} 
-          cy={cy} 
-          r={radius} 
-          fill="none" 
-          stroke="#e6e6e6"
-    strokeWidth={strokeWidth} /> )
-
-  }
-
-
-
-  render() {
-    console.log(this.viewBox);
+  render() { 
 
     let notes = [];
-    notes.length = 16;
+    notes.length = this.props.ringDivision[0][this.props.ring];
     notes.fill(0);
     notes = notes.map((x, i) => i + 1);
-    // console.log(notes);
 
-    return notes.map((n) => this.renderButton(n))
+    if (this.props.ringSelection[0] === this.props.ring) {
+      return [<circle
+          key='outerSelectionRing' 
+          cx={this.props.cx} 
+          cy={this.props.cy} 
+          r={this.props.width / 2 + 1}  
+          fill="transparent"
+          stroke="red"
+          strokeWidth={2} />,
+        notes.map((n) => this.renderButton(n)),
+        <circle
+        key='innerSelectionRing' 
+        cx={this.props.cx} 
+        cy={this.props.cy} 
+        r={this.props.width / 2 - this.strokeWidth}  
+        fill="transparent"
+        stroke="red"
+        strokeWidth={2} />]
+      } else {
+        return ( notes.map((n) => this.renderButton(n)))
+      }
   }
 }
+
+const mapStateToProps = ({ ringSelection, ringDivision }) => {
+  return {
+    ringSelection,
+    ringDivision
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    selectRing: (ring) => dispatch(selectRing(ring)),
+    changeRingDivision: (ring, division) => dispatch(changeRingDivision(ring, division))
+  }
+}
+
+Sequencer = connect(mapStateToProps, mapDispatchToProps)(Sequencer);
 
 export default Sequencer;
