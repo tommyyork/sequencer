@@ -14,11 +14,9 @@ const ringDivision = (
   state = [  {1 : CONSTANTS["1"].DIVISION, 2: CONSTANTS["2"].DIVISION, 3: CONSTANTS["3"].DIVISION} ], action) => {
   switch (action.type) {
     case 'CHANGE_RING_DIVISION':
-      console.log(action);
       let updatedObj = Object.assign({}, state[0])
       updatedObj[action.payload.ring] = action.payload.division;
-      console.log('attempting to update with updatedObj', updatedObj);
-      return [updatedObj, ...state];
+      return [updatedObj];
     default:
       return state;
     }

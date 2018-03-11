@@ -18,8 +18,6 @@ export class ParameterBox extends Component {
     this.props.changeReverbSize(val);
    }
 
-
-
   render() {
     return (
       <div className="d-flex justify-content-center">
@@ -31,7 +29,7 @@ export class ParameterBox extends Component {
             <Knob 
               style={{display: "inline-block"}}
               defaultValue={Math.floor(this.props.reverbWet * 100) / 100}
-              min={0} max={.8} // TODO: fix
+              min={0} max={.8} // values about 80% can introduce terrible feedback
               onChange={this.changeReverbWet.bind(this)} />
             </div>
             <div className="p-2 flex-row">
@@ -64,7 +62,7 @@ export class ParameterBox extends Component {
                 style={{display: "inline-block"}}
                 defaultValue={this.props.ringDivision[0]["1"]} 
                 min={1} 
-                max={16} 
+                max={17} 
                 onChange={(e) => this.props.changeRingDivision(1, Math.floor(e))} />
                         </div>
             <div className="p-2 flex-row">
@@ -80,7 +78,7 @@ export class ParameterBox extends Component {
                 style={{display: "inline-block"}}
                 defaultValue={this.props.ringDivision[0]["2"]} 
                 min={1} 
-                max={16} 
+                max={17} 
                 onChange={(e) => this.props.changeRingDivision(2, Math.floor(e))} />
                         </div>
             <div className="p-2 flex-row">
@@ -96,7 +94,7 @@ export class ParameterBox extends Component {
                 style={{display: "inline-block"}}
                 defaultValue={this.props.ringDivision[0]["3"]} 
                 min={1} 
-                max={16} 
+                max={17} 
                 onChange={(e) => this.props.changeRingDivision(3, Math.floor(e))} />
                         </div>
             <div className="p-2 flex-row">

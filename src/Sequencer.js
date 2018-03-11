@@ -52,8 +52,7 @@ class Sequencer extends Component {
 
 
   triggerSynth = (time, note) => {
-    console.log(this.synth);
-    this.setState({currentNote: note}, () => console.log(this.state.currentNote));
+    this.setState({currentNote: note});
     if (this.synth && this.state.sequence.on[note])
       this.synth.triggerAttackRelease(this.state.sequence.notes[note],
          `${this.props.noteLength ? this.props.noteLength : 1}n`, time);
@@ -72,8 +71,6 @@ class Sequencer extends Component {
     
     
     Tone.Transport.schedule(() => scheduleMeasure());
-
-
     Tone.Transport.loopEnd = '2m'
     Tone.Transport.loop = true;
 

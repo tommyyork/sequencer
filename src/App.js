@@ -54,10 +54,6 @@ class App extends Component {
 
   componentWillMount() {
     this.props.selectRing(1);
-
-    Tone.Transport.schedule(() => this.forceUpdate())
-    Tone.Transport.loopEnd = '2m';
-    Tone.Transport.loop = false;
   }
 
   render() {
