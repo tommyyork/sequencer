@@ -7,9 +7,9 @@ let CONSTANTS = {
   },
 
   SVG: {
-    WIDTH: 512,
-    HEIGHT: 512,
-    VIEWBOX: `0 0 512 512`
+    WIDTH: 514,
+    HEIGHT: 514,
+    VIEWBOX: `-2 -2 516 516`
   },
 
   1: {

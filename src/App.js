@@ -4,7 +4,7 @@ import Tone from 'tone';
 
 // components, styling.
 
-import './App.css';
+// import './App.css';
 import Sequencer from './Sequencer';
 import { ParameterBox } from './ParameterBox';
 
@@ -75,8 +75,7 @@ class App extends Component {
 
       <svg width={CONSTANTS.SVG.WIDTH} height={CONSTANTS.SVG.HEIGHT} viewBox={CONSTANTS.SVG.VIEWBOX} >
         <Sequencer 
-          ring={1} // identify which ring we're currently working on
-
+          ring={1} 
           top={CONSTANTS["1"].TOP} 
           right={CONSTANTS["1"].RIGHT} 
           width={CONSTANTS["1"].WIDTH} 
@@ -93,7 +92,6 @@ class App extends Component {
 
         <Sequencer 
           ring={2}
-
           top={CONSTANTS["2"].TOP} 
           right={CONSTANTS["2"].RIGHT} 
           width={CONSTANTS["2"].WIDTH} 
@@ -110,7 +108,6 @@ class App extends Component {
         
         <Sequencer 
           ring={3}
-
           top={CONSTANTS["3"].TOP} 
           right={CONSTANTS["3"].RIGHT} 
           width={CONSTANTS["3"].WIDTH} 
@@ -128,13 +125,13 @@ class App extends Component {
       </pre>
 
       </div>
-      <div style={{color: 'white'}}>
-        Selected ring is highlighted in red. 
-        Select rings by clicking on them. 
+      <div className="notes">
+        <p>The selected ring is highlighted in red. 
+        You can select rings by clicking on any notes in them. 
         Once you've selected a ring, you can 
-        turn notes on and off by clicking on them.
-        </div>
-        <p></p>
+        turn notes on (blue) and off (black) by clicking on them.</p>
+        <p>Loops re-divide (sound different depending on the divisions selected below) at the top of the measure.</p>
+      </div>
       <ParameterBox 
         changeReverbWet={this.changeReverbWet.bind(this)} 
         changeReverbSize={this.changeReverbSize.bind(this)}

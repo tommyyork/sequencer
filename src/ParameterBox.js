@@ -21,7 +21,6 @@ export class ParameterBox extends Component {
   render() {
     return (
       <div className="d-flex justify-content-center">
-
         <div className="parameterBox flex-row">
         <div className="d-flex">
           <div className="p-2 flex-column">
@@ -50,7 +49,6 @@ export class ParameterBox extends Component {
                 onChange={this.changeReverbSize.bind(this)} />
                         </div>
             <div className="p-2 flex-row">
-
               {Math.floor(this.props.reverbSize * 100) / 100}<br />
               Reverb Size
             </div>
@@ -105,7 +103,6 @@ export class ParameterBox extends Component {
           </div>
 
         </div>
-        (Note that the loop re-divide on the measure)
       </div>
 
       </div>
